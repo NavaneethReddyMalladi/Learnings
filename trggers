@@ -1,0 +1,125 @@
+✅ What is a Trigger?
+
+A Trigger is a set of instructions that automatically runs (i.e., gets triggered) when a certain event occurs on a table or view.
+
+    🗣️ In simple words: "If someone inserts/updates/deletes a row, automatically do this…"
+
+🧩 Triggers Have Two Main Parts:
+
+    Trigger Function → This is the actual logic/code to run
+
+    Trigger → This connects the function to a specific table + event
+
+🔥 When Do Triggers Fire?
+
+You can create triggers on these actions:
+Action	Meaning
+INSERT	When a new row is added
+UPDATE	When a row is updated
+DELETE	When a row is removed
+TRUNCATE	When a table is emptied
+
+You can fire them:
+
+    BEFORE the action (to validate/change data)
+
+    AFTER the action (to log or sync something)
+
+    INSTEAD OF (used with views)
+
+🧪 Example Use Case: Logging Insertions
+
+Let’s say you have a students table, and you want to log every insert into a separate log_table.
+🧱 Step 1: Create Main Table
+
+CREATE TABLE students (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  age INT
+);
+
+📘 Step 2: Create Log Table
+
+CREATE TABLE student_logs (
+  student_id INT,
+  name TEXT,
+  logged_at TIMESTAMP DEFAULT now()
+);
+
+🧠 Step 3: Create Trigger Function
+
+CREATE OR REPLACE FUNCTION log_student_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO student_logs(student_id, name)
+  VALUES (NEW.id, NEW.name);
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+    🔑 NEW = refers to the new row being inserted
+
+🚀 Step 4: Create the Trigger
+
+CREATE TRIGGER after_student_insert
+AFTER INSERT ON students
+FOR EACH ROW
+EXECUTE FUNCTION log_student_insert();
+
+Now, whenever you insert a student:
+
+INSERT INTO students(name, age) VALUES ('Mittu', 21);
+
+A new row gets added to student_logs automatically 💥
+💡 Trigger Keywords
+Keyword	Meaning
+NEW	Refers to new data (for INSERT/UPDATE)
+OLD	Refers to old data (for UPDATE/DELETE)
+FOR EACH ROW	Runs the trigger for each row
+FOR EACH STATEMENT	Runs once per query, not per row
+🧯 BEFORE vs AFTER
+
+    BEFORE → You can change or cancel the operation
+
+    AFTER → You can log, notify, or cascade changes
+
+🛡️ INSTEAD OF Trigger (For Views)
+
+Since you can't directly insert into a view, you can use INSTEAD OF to handle what should happen.
+📦 Example: BEFORE UPDATE to Set Timestamp
+
+Let’s say we want to automatically update a modified_at timestamp on row updates:
+Add Column:
+
+ALTER TABLE students ADD COLUMN modified_at TIMESTAMP;
+
+Trigger Function:
+
+CREATE OR REPLACE FUNCTION set_modified_time()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.modified_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+Trigger:
+
+CREATE TRIGGER before_student_update
+BEFORE UPDATE ON students
+FOR EACH ROW
+EXECUTE FUNCTION set_modified_time();
+
+⚠️ Best Practices
+
+✅ Keep trigger functions small and simple
+✅ Avoid long logic or external API calls inside triggers
+✅ Use for auditing, validation, timestamps, cascading data
+❌ Don’t overuse — hard to debug sometimes
+🧠 Summary
+Component	Example
+Trigger Event	AFTER INSERT
+Trigger Function	Logic that logs or modifies
+NEW / OLD	Refers to row values
+Trigger Timing	BEFORE, AFTER, INSTEAD OF

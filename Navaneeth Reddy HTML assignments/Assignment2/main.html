@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>assignment</title>
+
+    <style>
+
+        /* *{
+            background-color: bisque; 
+        } */
+         header,footer{
+            background-color:bisque;
+            
+               }
+
+        iframe{
+            height:70vh;
+            width:100%;
+            border: none;
+        }
+       
+        .con{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 50px;
+            align-items: center;
+           
+        }
+        
+        img{
+            height: 70px;
+            width: 70px;
+            border-radius: 100px;
+
+        }
+        a{
+            padding-left: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        marquee{
+            font-size: 40px;
+            font-weight: bold;
+        }
+        .p{
+            text-align: center;
+        }
+        a:hover{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    
+        <header>
+            <div class="con" >
+                <div>
+                    <a href="home.html" target="frame"><img t src="https://picsum.photos/seed/picsum/200/300"/></a>
+                    </div>
+
+                <div>
+                
+                    <a href="home.html"    target="frame" >home</a>
+                    <a href="about.html"   target="frame">about</a>
+                    <a href="contact.html" target="frame">contact</a>
+
+                
+                </div>
+            </div>
+        </header>
+        <div>
+            <marquee scrollamount="10">Hi Everyone</marquee>
+        </div>
+        
+        <iframe src="home.html" name="frame">
+            <!-- <h1>hello</h1> -->
+          
+        </iframe>
+        <footer>
+            <p class="p"> &copy; All Rights Reversed</p>
+        </footer>
+    
+</body>
+</html>

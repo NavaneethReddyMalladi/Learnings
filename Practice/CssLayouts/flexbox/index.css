@@ -1,0 +1,23 @@
+.box{
+    height: 150px;
+    width: 150px;
+    background-color: cadetblue;
+    font-size: 40pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* flex-grow: 0; */
+    flex-shrink: 1;
+}
+body{
+    display:flex;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+@media (max-width:575px){
+    body{
+        flex-wrap: wrap;
+    }
+
+}

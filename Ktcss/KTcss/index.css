@@ -1,0 +1,50 @@
+.con {
+    height: 100px;
+    width: 100px;
+    
+    /* transition-property: all;
+    transition-duration:5s;
+    transition-timing-function: ease; */ 
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+    animation-name: bounce;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    background-color: aqua;
+    transform: translate(-50%,-50%);
+    
+
+
+
+}
+
+@keyframes bounce {
+
+    0%{transform: translate(-50%,-50%);
+
+    }
+
+    50%{
+        transform: translate(-50%,0);
+    }
+    
+    100%{
+        transform: translate(-50%,-50%)
+    }
+    
+}
+
+.con:hover{
+    /* transform: translateY(400px);
+    /* transform: translateX(400px); */
+    /* width: 400px;
+    height: 400px; */ 
+    /* >>>>>>>>>>>>>>>>>>>>>>>>.. */
+    
+
+animation-play-state: paused;
+}
+
+
+
+    
