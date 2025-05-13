@@ -1,0 +1,170 @@
+set search_path to test_schema
+
+select * from emp
+
+-- creating a basic fucniton 
+CREATE OR REPLACE FUNCTION add_numbers(a INT, b INT)
+RETURNS INT AS $$
+BEGIN
+    RETURN a + b;
+END;
+$$ LANGUAGE plpgsql;
+
+-- too call the function
+select add_numbers(10,20)
+
+--here we have already a function with same name , if we try to create with same name again the loguc inside is replaces with new one
+create or replace function add_numbers(a int,b int)
+returns int as $$
+begin 
+return a-b;
+end
+$$ language plpgsql
+
+-- func to return full name
+create or replace function full_name(first text, last text)
+returns text as $$
+begin 
+return first||last;
+end;
+$$ language plpgsql
+
+select full_name('mitttu','reddy')
+
+-- funct to check even number or not 
+-- NOTE:::: if we try to change the existing retuurns value it will not change you should drop the value first
+create or replace function is_even(n int)
+returns boolean as $$
+begin
+return (n%2=0);
+end;
+$$
+language plpgsql
+
+select is_even(5)
+
+
+-- fucntion to retuen rows and colums..
+create or replace function countemployes(d_id int)
+returns table(id int,name varchar,email varchar) as $$
+begin
+return query select emp.id,emp.ename,emp.email from emp where did=d_id;
+end
+$$
+language plpgsql;
+
+select * from countemployes(4);
+
+
+create or replace function count_count (d_id int)
+returns int as $$
+begin
+return ( select count(*) from emp where did=d_id);
+end
+$$
+language plpgsql;
+
+select count_count(4)
+
+
+-- function using if-else
+create or replace function get_grade(a int)
+returns text as $$
+begin 
+if a>=95 then return 'A grade';
+elsif a>=75 then return 'B grade';
+elsif a>=50 then return 'C grade';
+else return 'Fail';
+end if ;
+end;
+$$
+language plpgsql
+select get_grade(10)
+
+-- Create main table
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    salary NUMERIC
+);
+
+-- Create log table
+CREATE TABLE employee_log (
+    emp_id INT,
+    action TEXT,
+    log_time TIMESTAMP
+);
+
+-- Create trigger function
+CREATE OR REPLACE FUNCTION log_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO employee_log(emp_id, action, log_time)
+    VALUES (NEW.id, 'INSERT', NOW());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger
+CREATE TRIGGER trg_log_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+EXECUTE FUNCTION log_insert();
+
+insert into employees(id,name,salary) values(4,'navaneeth',89000)
+select * from employees
+select * from employee_log
+
+
+-- error if too low salary-----
+CREATE OR REPLACE FUNCTION check_salary()
+RETURNS TRIGGER AS $$ 
+BEGIN
+    IF NEW.salary < 5000 THEN
+        RAISE EXCEPTION 'Salary too low!';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_salary
+BEFORE INSERT OR UPDATE ON employees
+FOR EACH ROW
+EXECUTE FUNCTION check_salary();
+
+
+
+
+
+
+
+
+-- cte's ------common table expression
+-- cte work as sub query
+
+with avg_sal as(
+select avg(salary) as avg_salary from employees
+)
+select salary from employees,avg_sal where employees.salary >avg_sal.avg_salary
+
+select * from employees
+
+
+
+
+
+select current_schema()
+
+select current_database()
+
+
+-- to create a role and user
+set search_path to test_schema
+
+
+CREATE ROLE read_write;
+GRANT CONNECT ON DATABASE test TO read_write;GRANT USAGE, CREATE ON SCHEMA test_schema TO read_write;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA test_schema TO read_write;ALTER DEFAULT PRIVILEGES IN SCHEMA test_schema GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO read_write;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA test_schema TO read_write;ALTER DEFAULT PRIVILEGES IN SCHEMA test_schema GRANT USAGE ON SEQUENCES TO read_write;
+-- Users
+CREATE USER navaneeth WITH PASSWORD 'Mittu@1821';GRANT read_write TO navaneeth;

@@ -1,0 +1,97 @@
+select current_database()
+
+select current_schema
+
+set search_path to test_schema
+
+select * from student
+
+select * from users
+
+select * from mini_users
+
+create or replace function add_ages(a int,b int)
+returns int as  $$
+DECLARE
+    final_age INT;
+begin
+final_age :=a+b;
+return final_age;
+end;
+$$ language plpgsql
+
+select add_ages(10,20)
+
+create or replace function max_ages(min_age int)
+returns table(e_name text) as $$
+begin
+return query
+select name::text from users where age<min_age;
+end;
+$$ language plpgsql
+
+select * from max_ages(300)
+-- or
+create or replace function min_ages(min_age int)
+returns table(e_name varchar(100)) as $$
+begin
+return query
+select name from users where age<min_age;
+end;
+$$ language plpgsql
+
+select * from min_ages(300) where e_name='User 99'
+
+
+select * from users where name='User 99'
+
+create or replace function  max_ages(name varchar(100))
+returns table(age int) as $$ 
+begin
+return query
+select users.age  from users where users.age >10;
+end;
+$$ language plpgsql;
+
+
+
+select * from max_ages('User 99')
+drop function max_ages(int)
+
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    age INT
+);
+INSERT INTO users (name, age) VALUES
+('Alice', 25),
+('Bob', 30),
+('Charlie', 35),
+('David', 40),
+('Eve', 45);
+
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id),
+    product_name VARCHAR(100),
+    amount DECIMAL(10,2),
+    order_date DATE
+);
+
+INSERT INTO orders (user_id, product_name, amount, order_date) VALUES
+(1, 'Laptop', 1200.50, '2024-10-01'),
+(2, 'Phone', 800.00, '2024-10-05'),
+(1, 'Mouse', 25.00, '2024-10-08'),
+(3, 'Keyboard', 45.99, '2024-10-10'),
+(4, 'Monitor', 200.00, '2024-10-15');
+
+
+select * from orders
+select * from users
+
+select * from users  where age >(select avg(age) from users)
+
+
+
+

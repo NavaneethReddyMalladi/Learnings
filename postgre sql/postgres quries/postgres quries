@@ -1,0 +1,178 @@
+-- to move to current db
+select current_database();
+
+-- to create schema
+create schema test_schema;
+
+-- to use schema
+set search_path to test_schema;
+
+-- to see the current schema
+select current_schema();
+
+-- list all available schemas
+select schema_name from information_schema.schemata;
+
+---------------CRUD  OPERATIONS------------
+-- CREATE TABLE
+create table employee(
+id serial primary key,
+ename varchar(50) not null,
+email varchar(50) unique  not null,
+p_no varchar(10) not null check(char_length(p_no)=10),
+rating decimal(2,1),
+salary numeric(8,2),
+skills jsonb
+)
+
+-- insert into table
+insert into employee (ename, email, p_no, rating, salary, skills) values
+('John Doe', 'john.doe@example.com', '1234567890', 4.5, 75000.00, '{"languages": ["SQL", "Python"]}'),
+('Jane Smith', 'jane.smith@example.com', '0987654321', 4.8, 80000.00, '{"languages": ["Java", "C++"]}'),
+('Alice Johnson', 'alice.johnson@example.com', '1122334455', 4.2, 72000.00, '{"languages": ["JavaScript", "HTML"]}'),
+('Bob Brown', 'bob.brown@example.com', '2233445566', 3.9, 68000.00, '{"languages": ["Ruby", "Perl"]}'),
+('Charlie White', 'charlie.white@example.com', '3344556677', 4.7, 85000.00, '{"languages": ["Go", "Rust"]}'),
+('Diana Green', 'diana.green@example.com', '4455667788', 4.3, 77000.00, '{"languages": ["PHP", "SQL"]}'),
+('Eve Black', 'eve.black@example.com', '5566778899', 4.6, 81000.00, '{"languages": ["Python", "C#"]}'),
+('Frank Blue', 'frank.blue@example.com', '6677889900', 3.8, 65000.00, '{"languages": ["Scala", "Kotlin"]}'),
+('Grace Yellow', 'grace.yellow@example.com', '7788990011', 4.4, 79000.00, '{"languages": ["Swift", "Objective-C"]}'),
+('Hank Red', 'hank.red@example.com', '8899001122', 4.1, 73000.00, '{"languages": ["C", "Assembly"]}'),
+('Ivy Purple', 'ivy.purple@example.com', '9900112233', 4.9, 90000.00, '{"languages": ["R", "MATLAB"]}'),
+('Jack Orange', 'jack.orange@example.com', '1011121314', 3.7, 64000.00, '{"languages": ["Dart", "Flutter"]}'),
+('Karen Pink', 'karen.pink@example.com', '1213141516', 4.0, 70000.00, '{"languages": ["VB.NET", "F#"]}'),
+('Leo Gray', 'leo.gray@example.com', '1314151617', 4.5, 76000.00, '{"languages": ["TypeScript", "Node.js"]}'),
+('Mona Cyan', 'mona.cyan@example.com', '1415161718', 4.2, 72000.00, '{"languages": ["SQL", "PL/SQL"]}'),
+('Nina Lime', 'nina.lime@example.com', '1516171819', 4.6, 81000.00, '{"languages": ["Python", "Django"]}'),
+('Oscar Teal', 'oscar.teal@example.com', '1617181920', 4.3, 77000.00, '{"languages": ["Java", "Spring"]}'),
+('Paul Indigo', 'paul.indigo@example.com', '1718192021', 4.7, 85000.00, '{"languages": ["C++", "Qt"]}'),
+('Quinn Violet', 'quinn.violet@example.com', '1819202122', 4.8, 88000.00, '{"languages": ["JavaScript", "React"]}'),
+('Rita Magenta', 'rita.magenta@example.com', '1920212223', 4.4, 79000.00, '{"languages": ["PHP", "Laravel"]}');
+
+
+-- to fetch data
+select * from emp;
+
+select * from EMPLOYEE where salary>70000;
+
+--to add a extra column
+alter table employee add column hobbies text[];
+
+-- to change column
+alter table employee rename column hobbie to hobby;
+
+--to change type of a column
+alter table employee alter column hobby type text;
+
+alter table employee rename to emp;
+
+--to delete a specific row
+
+delete from emp where id=10;
+
+
+--creating  and inserting data into another table;
+
+create table dept(
+id serial primary key,
+dname varchar(20) not null
+)
+
+-- deleting all coumns except structure and re-adding data
+truncate table emp
+
+
+insert into emp (ename, email, p_no, rating, salary, skills, hobby, did) values
+('John Doe', 'john.doe@example.com', '1234567890', 4.5, 75000.00, '{"Java": "Expert", "SQL": "Intermediate"}', 'Reading', 1),
+('Jane Smith', 'jane.smith@example.com', '0987654321', 4.8, 80000.00, '{"Python": "Expert", "ML": "Advanced"}', 'Painting', 2),
+('Alice Johnson', 'alice.johnson@example.com', '1122334455', 4.2, 72000.00, '{"C++": "Intermediate", "JavaScript": "Advanced"}', 'Cycling', 3),
+('Bob Brown', 'bob.brown@example.com', '2233445566', 3.9, 68000.00, '{"HTML": "Expert", "CSS": "Expert"}', 'Gaming', 4),
+('Charlie Davis', 'charlie.davis@example.com', '3344556677', 4.7, 85000.00, '{"Go": "Advanced", "Kubernetes": "Intermediate"}', 'Hiking', 5),
+('Emily White', 'emily.white@example.com', '4455667788', 4.3, 77000.00, '{"Ruby": "Expert", "Rails": "Advanced"}', 'Cooking', 1),
+('Frank Green', 'frank.green@example.com', '5566778899', 4.1, 69000.00, '{"PHP": "Intermediate", "Laravel": "Advanced"}', 'Photography', 2),
+('Grace Hall', 'grace.hall@example.com', '6677889900', 4.6, 81000.00, '{"Swift": "Expert", "iOS": "Advanced"}', 'Traveling', 3),
+('Henry Adams', 'henry.adams@example.com', '7788990011', 3.8, 64000.00, '{"Perl": "Intermediate", "Shell": "Advanced"}', 'Fishing', 4),
+('Ivy Baker', 'ivy.baker@example.com', '8899001122', 4.4, 76000.00, '{"Scala": "Expert", "Spark": "Advanced"}', 'Gardening', 5),
+('Jack Carter', 'jack.carter@example.com', '9900112233', 4.0, 70000.00, '{"C": "Intermediate", "Assembly": "Advanced"}', 'Running', 1),
+('Karen Evans', 'karen.evans@example.com', '1011121314', 4.9, 90000.00, '{"JavaScript": "Expert", "React": "Advanced"}', 'Yoga', 2),
+('Leo Foster', 'leo.foster@example.com', '1213141516', 4.2, 73000.00, '{"Python": "Advanced", "Django": "Intermediate"}', 'Swimming', 3),
+('Mia Garcia', 'mia.garcia@example.com', '1314151617', 4.5, 78000.00, '{"HTML": "Expert", "CSS": "Advanced"}', 'Dancing', 4),
+('Noah Harris', 'noah.harris@example.com', '1415161718', 4.3, 75000.00, '{"Java": "Advanced", "Spring": "Intermediate"}', 'Singing', 5),
+('Olivia King', 'olivia.king@example.com', '1516171819', 4.7, 82000.00, '{"Ruby": "Expert", "Sinatra": "Advanced"}', 'Writing', 1),
+('Paul Lewis', 'paul.lewis@example.com', '1617181920', 4.1, 71000.00, '{"Go": "Intermediate", "Docker": "Advanced"}', 'Drawing', 2),
+('Quinn Martinez', 'quinn.martinez@example.com', '1718192021', 4.6, 80000.00, '{"Swift": "Expert", "Xcode": "Advanced"}', 'Climbing', 3),
+('Rachel Nelson', 'rachel.nelson@example.com', '1819202122', 4.4, 77000.00, '{"PHP": "Advanced", "Symfony": "Intermediate"}', 'Knitting', 4),
+('Sam Owens', 'sam.owens@example.com', '1920212223', 3.9, 67000.00, '{"C++": "Intermediate", "Qt": "Advanced"}', 'Board Games', 5),
+('Tina Perez', 'tina.perez@example.com', '2021222324', 4.8, 85000.00, '{"JavaScript": "Expert", "Vue": "Advanced"}', 'Surfing', 1),
+('Uma Quinn', 'uma.quinn@example.com', '2122232425', 4.2, 74000.00, '{"Python": "Intermediate", "Flask": "Advanced"}', 'Skiing', 2),
+('Victor Reed', 'victor.reed@example.com', '2223242526', 4.0, 69000.00, '{"Java": "Advanced", "Hibernate": "Intermediate"}', 'Chess', 3),
+('Wendy Scott', 'wendy.scott@example.com', '2324252627', 4.3, 76000.00, '{"Ruby": "Expert", "Padrino": "Advanced"}', 'Origami', 4),
+('Xander Taylor', 'xander.taylor@example.com', '2425262728', 4.5, 78000.00, '{"Go": "Advanced", "Terraform": "Intermediate"}', 'Camping', 5);
+
+
+insert into dept (dname) values
+('HR'),
+('Finance'),
+('Engineering'),
+('Marketing'),
+('Sales');
+ 
+
+--adding foriegn key in emp table
+alter table emp add column did int references dept(id);
+
+
+select did from emp;
+select id from dept
+
+
+
+-- joining two tables
+select emp.ename,dept.dname from emp inner join dept on emp.did=dept.id
+where dept.dname='HR' or dept.dname='Sales'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
